@@ -12,6 +12,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Users CRUD (FastAPI + Postgres + Docker)")
 app.include_router(ai_query.router)
 app.include_router(student.router)
+print("Registered routes:", app.routes)
 
 load_dotenv()
 print("API key is:", os.getenv("OPENAI_API_KEY"))

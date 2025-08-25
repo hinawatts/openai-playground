@@ -19,3 +19,17 @@ def upsert_student_note(student_id: int, note_id: int, text: str) -> None:
 def delete_student_note(note_id: int) -> None:
   client = get_qdrant_client()
   client.delete(collection_name=_COLLECTION, points_selector={"points": [note_id]})
+
+def get_notes(top_k: int, question: str):
+    client = get_qdrant_client()
+    query_vec = embed_text(question)
+    hits = client.search(collection_name=_COLLECTION, query_vector=query_vec, limit=top_k, with_payload=True)
+    return [
+         {
+              "note_id": h.id,
+              "score": float(h.score),
+              "student_id": h.payload.get("student_id"),
+              "text": h.payload.get("text"),
+         }
+         for h in hits
+    ]

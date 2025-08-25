@@ -12,3 +12,8 @@ class StudentResponse(StudentRequest):
 
     class Config:
         orm_mode = True
+
+
+class StudentQuery(BaseModel):
+    question: str
+    top_k: int

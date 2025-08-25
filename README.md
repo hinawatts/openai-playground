@@ -21,6 +21,10 @@ It combines a traditional relational database (**Postgres + SQLAlchemy**) with a
   - Queries return students by *meaning* (not just keywords).  
 - **Hybrid filtering**: Combine SQL filters (`min_absences`) with vector search.  
 - **AI-powered endpoint**: Natural language questions about students and their notes.  
+- **RAG endpoint**: Introduced a Retrieval-Augmented Generation flow.  
+  - Retrieves top-K relevant notes from Qdrant.  
+  - Uses GPT (`gpt-4o-mini`) to generate natural-language summaries or answers.
+- **AI summaries**: Questions like *“Which students are struggling with writing?”* return a concise AI-generated answer instead of just raw notes.  
 
 ---
 

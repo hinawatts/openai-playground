@@ -7,7 +7,10 @@ from qdrant_client.models import Distance, VectorParams
 def get_qdrant_client() -> QdrantClient:
     host = os.getenv("QDRANT_HOST", "localhost")
     port = int(os.getenv("QDRANT_PORT", "6333"))
-    return QdrantClient(host=host, port=port)
+    url = os.getenv("QDRANT_URL")
+    api_key = os.getenv("QDRANT_API_KEY")
+    return QdrantClient(url=url, api_key=api_key, timeout=20)
+    # return QdrantClient(host=host, port=port)
 
 
 def ensure_collection(client: QdrantClient, collection: str, vector_size: int = 1536) -> None:

@@ -24,3 +24,6 @@ def create_student(db: Session, payload: dtos.StudentRequest) -> models.Student:
         )
 
     return student
+
+def get_student(db: Session, student_id: int) -> models.Student|None:
+    return db.get(models.Student, student_id)
