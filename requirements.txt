@@ -1,3 +1,4 @@
+tiktoken
 fastapi==0.115.0
 uvicorn==0.30.6
 SQLAlchemy==2.0.34
@@ -8,3 +9,5 @@ pydantic-settings==2.5.2
 email-validator==2.1.1
 openai==1.40.0
 qdrant-client==1.9.2
+tiktoken==0.4.0
+python-multipart==0.0.20

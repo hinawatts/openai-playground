@@ -25,8 +25,12 @@ It combines a traditional relational database (**Postgres + SQLAlchemy**) with a
   - Retrieves top-K relevant notes from Qdrant.  
   - Uses GPT (`gpt-4o-mini`) to generate natural-language summaries or answers.
 - **AI summaries**: Questions like *“Which students are struggling with writing?”* return a concise AI-generated answer instead of just raw notes.  
-
----
+- **Document Chunking for RAG**:
+  - Supports uploading long text documents (e.g., feedback reports).
+  - Chunks documents into smaller pieces for embedding and storage in Qdrant.
+  - Enables semantic search and RAG on large documents.
+  - Improves answer precision by focusing on relevant sections.
+  - Reduces token usage and costs by avoiding feeding entire documents to the LLM.
 
 ## 🛠️ Tech Stack  
 

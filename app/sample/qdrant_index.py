@@ -6,8 +6,8 @@ load_dotenv()
 qdrant = QdrantClient(url=os.getenv("QDRANT_URL"), api_key=os.getenv("QDRANT_API_KEY"))
 
 qdrant.create_payload_index(
-    collection_name="student_notes",
-    field_name="tags",
+    collection_name="student_notes_chunks",
+    field_name="student_id",
     field_schema=PayloadSchemaType.KEYWORD
 )
 
