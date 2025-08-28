@@ -1,4 +1,5 @@
 import os
+import re
 from typing import cast, Optional, List
 
 from openai import OpenAI
@@ -51,6 +52,9 @@ def summarize_student_from_chunked_data(question: str, top_k: int, student_id: O
     flt = models.Filter(must=filters) if filters else None
     hits = get_qdrant_client().search(collection_name=os.getenv("QDRANT_COLLECTION_CHUNKS"), query_filter=flt,
                                       query_vector=qvec, limit=top_k, with_payload=True)
+
+    hits = rerank_llm(question, hits, top_k)
+
     contexts, sources = [], []
     for h in hits:
         chunk = h.payload.get("text","")
@@ -89,3 +93,36 @@ def generate_answer(question: str, contexts: List[str]) -> str:
         temperature=0.2,
     )
     return resp.choices[0].message.content
+
+def rerank_llm(question:str, hits, top_n):
+    texts = [h.payload.get("text","") for h in hits]
+    listing = "\n\n".join([f"Chunk {i}:\n{texts[i]}" for i in range(len(texts))])
+    prompt = f"""
+You are re-ranking chunks for relevance to the question.
+Return ONLY a comma-separated list of the top {top_n} chunk numbers in descending relevance (e.g., "2,0,5").
+
+Question:
+{question}
+
+Chunks:
+{listing}
+"""
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=cast(list[ChatCompletionMessageParam],[
+            {"role":"user","content":prompt}
+        ]),
+        temperature=0,
+    ).choices[0].message.content
+    ints = [int(x) for x in re.findall(r"\d+", resp)]
+    ordered_unique = []
+    seen = set()
+    for i in ints:
+        if i not in seen and 0 <= i < len(hits):
+            ordered_unique.append(i)
+            seen.add(i)
+        if len(ordered_unique)>=top_n:
+            break
+    if not ordered_unique:
+        return hits[:top_n]
+    return [hits[i] for i in ordered_unique]

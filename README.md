@@ -31,6 +31,11 @@ It combines a traditional relational database (**Postgres + SQLAlchemy**) with a
   - Enables semantic search and RAG on large documents.
   - Improves answer precision by focusing on relevant sections.
   - Reduces token usage and costs by avoiding feeding entire documents to the LLM.
+- **Re-ranking with LLM**:
+  - Retrieve chunks from Qdrant.
+  - Use GPT to select the most relevant chunks before final answer generation.
+  - Improves accuracy by filtering out semantically similar but contextually irrelevant chunks.
+
 
 ## 🛠️ Tech Stack  
 
